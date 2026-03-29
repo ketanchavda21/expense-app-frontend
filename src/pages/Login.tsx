@@ -51,7 +51,7 @@ const Login = () => {
             Welcome Back
           </h2>
           <p className="mt-2 text-center text-sm font-medium text-gray-500">
-            Sign in to continue to FinClear
+            Sign in to continue to Expense Management
           </p>
         </div>
         
