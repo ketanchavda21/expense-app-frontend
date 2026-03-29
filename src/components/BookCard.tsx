@@ -10,6 +10,8 @@ interface BookCardProps {
 const BookCard: React.FC<BookCardProps> = ({ book }) => {
   const balance = book.balance || 0;
   const isPositive = balance >= 0;
+  const totalFlow = Number(book.total_income || 0) + Number(book.total_expense || 0);
+  const expenseShare = totalFlow > 0 ? (Number(book.total_expense || 0) / totalFlow) * 100 : 0;
   
   // Identify owner logic
   const ownerMember = book.members?.find(m => m.role === 'owner');
@@ -60,6 +62,16 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
         <div className="flex flex-col items-end">
           <span className="mb-1 text-xs font-semibold uppercase tracking-wider text-slate-400">Expense</span>
           <span className="font-bold text-rose-600">₹{Number(book.total_expense || 0).toFixed(2)}</span>
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <div className="mb-1.5 flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+          <span>Expense Share</span>
+          <span>{expenseShare.toFixed(0)}%</span>
+        </div>
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+          <div className="h-full rounded-full bg-rose-400" style={{ width: `${Math.min(100, Math.max(4, expenseShare))}%` }} />
         </div>
       </div>
     </Link>

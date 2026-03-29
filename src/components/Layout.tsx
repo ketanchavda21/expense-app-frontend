@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { LogOut, Menu, Bell, User as UserIcon, Check, Info } from 'lucide-react';
@@ -18,10 +18,27 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const profileDropdownRef = useRef<HTMLDivElement>(null);
   
   // Toast State
   const [toastMessage, setToastMessage] = useState<{title: string, type: 'success' | 'error'} | null>(null);
   const [processingNotifications, setProcessingNotifications] = useState<Set<string>>(new Set());
+  const pageLabel = useMemo(() => {
+    if (location.pathname.startsWith('/books/')) return 'Book Workspace';
+    if (location.pathname === '/dashboard' || location.pathname === '/') return 'Dashboard';
+    if (location.pathname === '/profile') return 'Profile';
+    if (location.pathname === '/invitations') return 'Invitations';
+    return 'Expense Management';
+  }, [location.pathname]);
+  const todayLabel = useMemo(
+    () =>
+      new Intl.DateTimeFormat('en-IN', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+      }).format(new Date()),
+    []
+  );
 
   const showToast = (title: string, type: 'success' | 'error' = 'success') => {
     setToastMessage({title, type});
@@ -49,6 +66,23 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
     };
   }, [notificationsOpen]);
 
+  // Close profile dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+        setProfileOpen(false);
+      }
+    };
+
+    if (profileOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [profileOpen]);
+
   useEffect(() => {
     const handleRefresh = () => fetchNotifications();
     window.addEventListener('refreshNotifications', handleRefresh);
@@ -74,8 +108,6 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       if (response.data && response.data.data) {
         const notificationsData = response.data.data.notifications || [];
         const count = response.data.data.unread_count || 0;
-        
-        console.log("Notifications:", notificationsData);
         
         setNotifications(Array.isArray(notificationsData) ? notificationsData : []);
         setUnreadCount(count);
@@ -160,7 +192,10 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <div className="min-h-screen text-slate-900 flex flex-col">
+    <div className="relative min-h-screen text-slate-900 flex flex-col overflow-hidden">
+      <div className="pointer-events-none absolute -left-24 top-12 h-72 w-72 rounded-full bg-teal-300/20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 top-1/3 h-80 w-80 rounded-full bg-sky-300/15 blur-3xl" />
+
       {/* Top Navbar */}
       <header className="sticky top-0 z-50 border-b border-white/60 bg-white/80 shadow-sm backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -175,6 +210,15 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                   className="h-10 w-auto cursor-pointer"
                 />
                 <span className="text-xl font-extrabold text-slate-900 tracking-tight text-nowrap">Expense Management</span>
+              </div>
+            </div>
+
+            <div className="hidden md:flex items-center">
+              <div className="inline-flex items-center gap-3 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-600 shadow-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                <span className="font-semibold">{pageLabel}</span>
+                <span className="text-slate-300">|</span>
+                <span className="font-medium">{todayLabel}</span>
               </div>
             </div>
 
@@ -304,7 +348,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
               <div className="h-6 w-px bg-slate-200 mx-3 hidden sm:block"></div>
               
               {/* Profile dropdown */}
-              <div className="relative ml-2 sm:ml-0">
+              <div className="relative ml-2 sm:ml-0" ref={profileDropdownRef}>
                 <button 
                   onClick={() => {
                     setProfileOpen(!profileOpen);
@@ -321,7 +365,6 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                 
                 {profileOpen && (
                   <>
-                    <div className="fixed inset-0 z-10" onClick={() => setProfileOpen(false)}></div>
                     <div className="origin-top-right absolute right-0 mt-3 w-56 rounded-xl shadow-lg py-1 bg-white z-20 border border-slate-200">
                       <div className="px-4 py-3 border-b border-slate-100">
                         <p className="text-sm font-semibold text-slate-900 truncate">{user?.name || 'User'}</p>
@@ -421,9 +464,22 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-        {children}
+      <main className="relative z-10 flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <div key={location.pathname} className="animate-fade-in-up">
+          {children}
+        </div>
       </main>
+
+      <footer className="relative z-10 border-t border-white/60 bg-white/70 backdrop-blur-xl">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-4 py-5 text-center sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <p className="text-sm font-medium text-slate-600">
+            Copyright {new Date().getFullYear()} - All rights reserved.
+          </p>
+          <p className="text-sm font-semibold text-slate-700">
+            Powered by <span className="text-teal-700">Ketan Chavda</span>
+          </p>
+        </div>
+      </footer>
 
       {/* Toast Notification */}
       {toastMessage && (

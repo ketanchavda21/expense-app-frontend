@@ -2,8 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import api from '../api/axios';
 import type { Book } from '../types';
 import BookCard from '../components/BookCard';
-import { PlusCircle, Loader2, BookOpen, ArrowRight, Sparkles, Wallet, TrendingUp, TrendingDown } from 'lucide-react';
+import { PlusCircle, Loader2, BookOpen, ArrowRight, Sparkles, Wallet, TrendingUp, TrendingDown, ShieldCheck, Activity } from 'lucide-react';
 import logo from '../assets/em.png';
+import type { Transaction } from '../types';
 
 const Dashboard = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -21,11 +22,59 @@ const Dashboard = () => {
     fetchBooks();
   }, []);
 
+  const summarizeTransactions = (transactions: Transaction[]) => {
+    const totalIncome = transactions
+      .filter((tx) => tx.type === 'income')
+      .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
+    const totalExpense = transactions
+      .filter((tx) => tx.type === 'expense')
+      .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
+
+    return {
+      total_income: totalIncome,
+      total_expense: totalExpense,
+      balance: totalIncome - totalExpense,
+    };
+  };
+
+  const needsComputedTotals = (book: Book) => {
+    const hasAnyAggregate =
+      book.total_income !== undefined ||
+      book.total_expense !== undefined ||
+      book.balance !== undefined;
+
+    if (!hasAnyAggregate) return true;
+
+    const income = Number(book.total_income || 0);
+    const expense = Number(book.total_expense || 0);
+    const balance = Number(book.balance || 0);
+
+    return income === 0 && expense === 0 && balance === 0;
+  };
+
   const fetchBooks = async () => {
     try {
       const response = await api.get('/books');
       const data = response.data.data || response.data;
-      setBooks(Array.isArray(data) ? data : []);
+      const normalizedBooks = Array.isArray(data) ? data : [];
+
+      const computedBooks = await Promise.all(
+        normalizedBooks.map(async (book: Book) => {
+          if (!needsComputedTotals(book)) return book;
+
+          try {
+            const txRes = await api.get(`/books/${book.slug}/transactions`);
+            const txData = txRes.data.data || txRes.data;
+            const transactions = Array.isArray(txData) ? txData : [];
+            const summary = summarizeTransactions(transactions);
+            return { ...book, ...summary };
+          } catch {
+            return book;
+          }
+        })
+      );
+
+      setBooks(computedBooks);
     } catch (err) {
       setError('Failed to load books. Please try again later.');
       setBooks([]);
@@ -78,6 +127,28 @@ const Dashboard = () => {
 
     return { totalBooks, totalIncome, totalExpense, netBalance };
   }, [books]);
+
+  const insights = useMemo(() => {
+    const savingsRate = stats.totalIncome > 0
+      ? ((stats.totalIncome - stats.totalExpense) / stats.totalIncome) * 100
+      : 0;
+    const expenseRatio = stats.totalIncome > 0
+      ? (stats.totalExpense / stats.totalIncome) * 100
+      : 0;
+    const topBook = books.reduce<Book | null>((prev, current) => {
+      if (!prev) return current;
+      const prevFlow = Number(prev.total_income || 0) + Number(prev.total_expense || 0);
+      const currentFlow = Number(current.total_income || 0) + Number(current.total_expense || 0);
+      return currentFlow > prevFlow ? current : prev;
+    }, null);
+
+    return {
+      savingsRate,
+      expenseRatio,
+      topBookName: topBook?.name || 'No activity yet',
+      topBookFlow: topBook ? Number(topBook.total_income || 0) + Number(topBook.total_expense || 0) : 0,
+    };
+  }, [books, stats.totalExpense, stats.totalIncome]);
 
   if (loading) {
     return (
@@ -150,6 +221,43 @@ const Dashboard = () => {
           </div>
           <p className={`mt-3 text-2xl font-black ${stats.netBalance >= 0 ? 'text-slate-900' : 'text-rose-600'}`}>
             {stats.netBalance < 0 ? '-' : ''}{formatCurrency(Math.abs(stats.netBalance))}
+          </p>
+        </div>
+      </section>
+
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-bold text-slate-800">Financial Health</p>
+            <ShieldCheck className="h-4 w-4 text-emerald-600" />
+          </div>
+          <p className="mt-3 text-xs uppercase tracking-[0.12em] text-slate-500">Savings Rate</p>
+          <p className={`mt-1 text-2xl font-black ${insights.savingsRate >= 0 ? 'text-emerald-700' : 'text-rose-600'}`}>
+            {insights.savingsRate.toFixed(1)}%
+          </p>
+          <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-100">
+            <div
+              className={`h-full rounded-full ${insights.savingsRate >= 0 ? 'bg-emerald-500' : 'bg-rose-500'}`}
+              style={{ width: `${Math.min(100, Math.max(8, Math.abs(insights.savingsRate)))}%` }}
+            />
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-bold text-slate-800">Top Activity Book</p>
+            <Activity className="h-4 w-4 text-sky-600" />
+          </div>
+          <p className="mt-3 line-clamp-1 text-base font-extrabold text-slate-900">{insights.topBookName}</p>
+          <p className="mt-1 text-sm text-slate-500">Total money flow in this book</p>
+          <p className="mt-2 text-xl font-black text-slate-900">{formatCurrency(insights.topBookFlow)}</p>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-teal-50 p-5 shadow-sm">
+          <p className="text-sm font-bold text-slate-800">Smart Insight</p>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600">
+            Expense ratio is <span className="font-extrabold text-slate-900">{insights.expenseRatio.toFixed(1)}%</span> of total income.
+            {insights.expenseRatio > 80 ? ' Consider tightening expense categories this week.' : ' You are maintaining a healthy spend pattern.'}
           </p>
         </div>
       </section>

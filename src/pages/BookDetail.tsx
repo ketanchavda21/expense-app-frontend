@@ -41,6 +41,21 @@ const BookDetail = () => {
     fetchBookData();
   }, [slug]);
 
+  const summarizeTransactions = (transactions: Transaction[]): BookStats => {
+    const total_income = transactions
+      .filter((tx) => tx.type === 'income')
+      .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
+    const total_expense = transactions
+      .filter((tx) => tx.type === 'expense')
+      .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
+
+    return {
+      total_income,
+      total_expense,
+      balance: total_income - total_expense,
+    };
+  };
+
   const fetchBookData = async (retryCount = 0) => {
     if (retryCount === 0) {
       setIsNotFound(false);
@@ -57,6 +72,7 @@ const BookDetail = () => {
       
       const bookData = bookRes.data.data || bookRes.data;
       const transactionsData = txRes.data.data || txRes.data;
+      const normalizedTransactions = Array.isArray(transactionsData) ? transactionsData : [];
       
       const assumedOwner = bookData.user_id === user?.id;
       if (!assumedOwner && !bookData.role && retryCount < 3) {
@@ -66,12 +82,21 @@ const BookDetail = () => {
       }
       
       setBook(bookData);
-      setTransactions(transactionsData || []);
-      setStats({
-        total_income: bookData.total_income || 0,
-        total_expense: bookData.total_expense || 0,
-        balance: bookData.balance || 0,
-      });
+      setTransactions(normalizedTransactions);
+
+      const computedStats = summarizeTransactions(normalizedTransactions);
+      const fallbackStats: BookStats = {
+        total_income: Number(bookData.total_income || 0),
+        total_expense: Number(bookData.total_expense || 0),
+        balance: Number(bookData.balance || 0),
+      };
+
+      const hasComputedValues =
+        computedStats.total_income !== 0 ||
+        computedStats.total_expense !== 0 ||
+        computedStats.balance !== 0;
+
+      setStats(hasComputedValues ? computedStats : fallbackStats);
     } catch (err: any) {
       if (err.response?.status === 404 || err.response?.data?.message?.toLowerCase().includes('not found')) {
         setIsNotFound(true);
@@ -93,7 +118,6 @@ const BookDetail = () => {
     setInviteMsg('');
 
     try {
-      console.log("Inviting to book:", slug);
       const response = await api.post(`/books/${slug}/invite`, { email: inviteEmail });
       
       const resMsg = response.data?.message?.toLowerCase() || "";
