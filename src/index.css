@@ -1,14 +1,54 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-50: #f0fdf4;
-  --color-primary-100: #dcfce7;
-  --color-primary-500: #22c55e;
-  --color-primary-600: #16a34a;
-  --color-primary-700: #15803d;
+  --color-brand-50: #ecfeff;
+  --color-brand-100: #cffafe;
+  --color-brand-500: #14b8a6;
+  --color-brand-600: #0d9488;
+  --color-brand-700: #0f766e;
+}
+
+:root {
+  --app-bg: #f3f7f7;
+  --app-text: #0f172a;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background-color: #f8fafc;
+  margin: 0;
+  min-height: 100vh;
+  color: var(--app-text);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(20, 184, 166, 0.14), transparent 28%),
+    radial-gradient(circle at 85% 14%, rgba(14, 116, 144, 0.14), transparent 30%),
+    linear-gradient(180deg, #f9fdfd 0%, var(--app-bg) 60%, #eef5f5 100%);
+  font-family: "Satoshi", "Manrope", "Segoe UI", sans-serif;
+  text-rendering: geometricPrecision;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(20, 184, 166, 0.25);
   color: #0f172a;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.25s ease-out;
 }

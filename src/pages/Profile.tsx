@@ -109,7 +109,7 @@ const Profile = () => {
   if (initialLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-teal-600"></div>
       </div>
     );
   }
@@ -117,23 +117,23 @@ const Profile = () => {
   return (
     <div className="max-w-2xl mx-auto py-8 px-4 sm:px-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Profile Settings</h1>
-        <p className="mt-2 text-sm font-medium text-gray-500">Manage your account details and security.</p>
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Profile Settings</h1>
+        <p className="mt-2 text-sm font-medium text-slate-500">Manage your account details and security.</p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         {/* Toast Notifications */}
         {error && (
-          <div className="mx-6 mt-6 p-4 rounded-lg bg-red-50 border border-red-100 flex items-center">
-            <AlertCircle className="h-5 w-5 text-red-500 mr-2 flex-shrink-0" />
-            <p className="text-sm font-semibold text-red-800">{error}</p>
+          <div className="mx-6 mt-6 flex items-center rounded-lg border border-rose-100 bg-rose-50 p-4">
+            <AlertCircle className="h-5 w-5 text-rose-500 mr-2 flex-shrink-0" />
+            <p className="text-sm font-semibold text-rose-800">{error}</p>
           </div>
         )}
 
         {success && (
-          <div className="mx-6 mt-6 p-4 rounded-lg bg-green-50 border border-green-100 flex items-center">
-            <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-            <p className="text-sm font-semibold text-green-800">{success}</p>
+          <div className="mx-6 mt-6 flex items-center rounded-lg border border-emerald-100 bg-emerald-50 p-4">
+            <CheckCircle className="h-5 w-5 text-emerald-500 mr-2 flex-shrink-0" />
+            <p className="text-sm font-semibold text-emerald-800">{success}</p>
           </div>
         )}
 
@@ -141,10 +141,10 @@ const Profile = () => {
           <div className="space-y-4">
             {/* Name */}
             <div>
-              <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-1.5">Full Name</label>
+              <label htmlFor="name" className="block text-sm font-semibold text-slate-700 mb-1.5">Full Name</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400" />
+                  <User className="h-5 w-5 text-slate-400" />
                 </div>
                 <input
                   type="text"
@@ -152,7 +152,7 @@ const Profile = () => {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-50 hover:bg-white transition-colors text-gray-900"
+                  className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-slate-900 transition-colors hover:bg-white focus:border-teal-400 focus:ring-2 focus:ring-teal-300 sm:text-sm"
                   placeholder="John Doe"
                 />
               </div>
@@ -160,28 +160,28 @@ const Profile = () => {
 
             {/* Email (Read only) */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1.5">Email Address</label>
+              <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-1.5">Email Address</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+                  <Mail className="h-5 w-5 text-slate-400" />
                 </div>
                 <input
                   type="email"
                   id="email"
                   disabled
                   value={email}
-                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg sm:text-sm bg-gray-100 text-gray-500 cursor-not-allowed"
+                  className="block w-full rounded-lg border border-slate-200 bg-slate-100 py-2.5 pl-10 pr-3 text-slate-500 cursor-not-allowed sm:text-sm"
                 />
               </div>
-              <p className="mt-1 text-xs text-gray-400">Email cannot be changed.</p>
+              <p className="mt-1 text-xs text-slate-400">Email cannot be changed.</p>
             </div>
 
             {/* Phone */}
             <div>
-              <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-1.5">Phone Number</label>
+              <label htmlFor="phone" className="block text-sm font-semibold text-slate-700 mb-1.5">Phone Number</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Phone className="h-5 w-5 text-gray-400" />
+                  <Phone className="h-5 w-5 text-slate-400" />
                 </div>
                 <input
                   type="text"
@@ -190,37 +190,37 @@ const Profile = () => {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="Enter phone number"
-                  className={`block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg sm:text-sm ${
+                  className={`block w-full rounded-lg border border-slate-200 py-2.5 pl-10 pr-3 sm:text-sm ${
                     isPhoneFixed 
-                    ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
-                    : 'bg-gray-50 hover:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900'
+                    ? 'bg-slate-100 text-slate-500 cursor-not-allowed' 
+                    : 'bg-slate-50 hover:bg-white focus:ring-2 focus:ring-teal-300 focus:border-teal-400 transition-colors text-slate-900'
                   }`}
                 />
               </div>
               {isPhoneFixed ? (
-                <p className="mt-1 text-xs text-gray-400">Phone number cannot be changed.</p>
+                <p className="mt-1 text-xs text-slate-400">Phone number cannot be changed.</p>
               ) : (
-                <p className="mt-1 text-xs text-blue-500">You can add your phone number now. Once saved, it cannot be changed.</p>
+                <p className="mt-1 text-xs text-teal-600">You can add your phone number now. Once saved, it cannot be changed.</p>
               )}
             </div>
 
             <div className="pt-4 pb-2">
-              <div className="h-px bg-gray-100 w-full"></div>
+              <div className="h-px bg-slate-100 w-full"></div>
             </div>
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-1.5">New Password <span className="text-gray-400 font-normal">(optional)</span></label>
+              <label htmlFor="password" className="block text-sm font-semibold text-slate-700 mb-1.5">New Password <span className="text-slate-400 font-normal">(optional)</span></label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                  <Lock className="h-5 w-5 text-slate-400" />
                 </div>
                 <input
                   type="password"
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-50 hover:bg-white transition-colors text-gray-900"
+                  className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-slate-900 transition-colors hover:bg-white focus:border-teal-400 focus:ring-2 focus:ring-teal-300 sm:text-sm"
                   placeholder="Leave blank to keep same"
                 />
               </div>
@@ -229,10 +229,10 @@ const Profile = () => {
             {/* Confirm Password */}
             {password && (
               <div>
-                <label htmlFor="password_confirmation" className="block text-sm font-semibold text-gray-700 mb-1.5">Confirm New Password</label>
+                <label htmlFor="password_confirmation" className="block text-sm font-semibold text-slate-700 mb-1.5">Confirm New Password</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
+                    <Lock className="h-5 w-5 text-slate-400" />
                   </div>
                   <input
                     type="password"
@@ -240,7 +240,7 @@ const Profile = () => {
                     required
                     value={passwordConfirmation}
                     onChange={(e) => setPasswordConfirmation(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-50 hover:bg-white transition-colors text-gray-900"
+                    className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-slate-900 transition-colors hover:bg-white focus:border-teal-400 focus:ring-2 focus:ring-teal-300 sm:text-sm"
                     placeholder="Confirm your new password"
                   />
                 </div>
@@ -248,11 +248,11 @@ const Profile = () => {
             )}
           </div>
 
-          <div className="pt-4 border-t border-gray-100 flex justify-end">
+          <div className="pt-4 border-t border-slate-100 flex justify-end">
             <button
               type="submit"
               disabled={loading}
-              className="flex items-center justify-center py-2.5 px-6 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300 transition-colors"
+              className="flex items-center justify-center rounded-lg border border-transparent bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 disabled:bg-slate-400"
             >
               {loading ? (
                 <>

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import { Mail, Lock, AlertCircle } from 'lucide-react';
+import logo from '../assets/em.png';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -39,27 +40,27 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 h-screen bg-gray-50">
-      <div className="w-full max-w-md space-y-8 bg-white p-8 sm:p-10 rounded-2xl shadow-sm border border-gray-200">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
+      <div className="pointer-events-none absolute -left-32 top-12 h-64 w-64 rounded-full bg-teal-300/20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 bottom-4 h-72 w-72 rounded-full bg-sky-300/20 blur-3xl" />
+      <div className="w-full max-w-md space-y-8 rounded-3xl border border-slate-200 bg-white/90 p-8 shadow-[0_35px_80px_-45px_rgba(15,23,42,0.7)] backdrop-blur sm:p-10">
         <div>
-          <div className="mx-auto h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-sm">
-            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-900 to-slate-700 shadow-lg shadow-slate-900/25">
+            <img src={logo} alt="Expense Management" className="h-8 w-8 rounded-md object-cover" />
           </div>
-          <h2 className="mt-6 text-center text-2xl font-bold text-gray-900 tracking-tight">
+          <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-slate-900">
             Welcome Back
           </h2>
-          <p className="mt-2 text-center text-sm font-medium text-gray-500">
+          <p className="mt-2 text-center text-sm font-medium text-slate-500">
             Sign in to continue to Expense Management
           </p>
         </div>
         
         {error && (
-          <div className="rounded-lg bg-red-50 p-4 border border-red-100">
+          <div className="rounded-xl border border-rose-100 bg-rose-50 p-4">
             <div className="flex items-center">
-              <AlertCircle className="h-5 w-5 text-red-500 mr-2" aria-hidden="true" />
-              <h3 className="text-sm font-semibold text-red-800">{error}</h3>
+              <AlertCircle className="mr-2 h-5 w-5 text-rose-500" aria-hidden="true" />
+              <h3 className="text-sm font-semibold text-rose-800">{error}</h3>
             </div>
           </div>
         )}
@@ -70,7 +71,7 @@ const Login = () => {
               <label htmlFor="email-address" className="sr-only">Email address</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+                  <Mail className="h-5 w-5 text-slate-400" />
                 </div>
                 <input
                   id="email-address"
@@ -78,7 +79,7 @@ const Login = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  className="appearance-none rounded-lg relative block w-full px-3 py-2.5 pl-10 border border-gray-200 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm font-medium bg-gray-50 hover:bg-white transition-colors"
+                  className="relative block w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 pl-10 text-sm font-medium text-slate-900 transition-colors placeholder:text-slate-400 hover:bg-white focus:outline-none focus:ring-2 focus:ring-teal-400"
                   placeholder="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -89,7 +90,7 @@ const Login = () => {
               <label htmlFor="password" className="sr-only">Password</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                  <Lock className="h-5 w-5 text-slate-400" />
                 </div>
                 <input
                   id="password"
@@ -97,7 +98,7 @@ const Login = () => {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="appearance-none rounded-lg relative block w-full px-3 py-2.5 pl-10 border border-gray-200 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm font-medium bg-gray-50 hover:bg-white transition-colors"
+                  className="relative block w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 pl-10 text-sm font-medium text-slate-900 transition-colors placeholder:text-slate-400 hover:bg-white focus:outline-none focus:ring-2 focus:ring-teal-400"
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -110,7 +111,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300 transition-colors shadow-sm"
+              className="w-full rounded-xl border border-transparent bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 disabled:bg-slate-400"
             >
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
@@ -120,17 +121,17 @@ const Login = () => {
         <div className="mt-6">
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
+              <div className="w-full border-t border-slate-200" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-3 bg-white text-gray-500 font-medium">Or continue with</span>
+              <span className="bg-white px-3 font-medium text-slate-500">Or continue with</span>
             </div>
           </div>
 
           <div className="mt-6">
             <button
               onClick={handleGoogleLogin}
-              className="w-full flex justify-center items-center py-2.5 px-4 border border-gray-200 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 transition-colors"
+              className="w-full flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-1"
             >
               <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
                 <path
@@ -156,9 +157,9 @@ const Login = () => {
         </div>
         
         <div className="text-center pt-2 mt-4">
-          <p className="text-sm font-medium text-gray-600">
+          <p className="text-sm font-medium text-slate-600">
             Don't have an account?{' '}
-            <Link to="/register" className="font-semibold text-blue-600 hover:text-blue-500 transition-colors">
+            <Link to="/register" className="font-bold text-teal-700 transition-colors hover:text-teal-600">
               Register here
             </Link>
           </p>

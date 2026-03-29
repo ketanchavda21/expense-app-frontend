@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { LogOut, Menu, Bell, User as UserIcon, Search, Check, Info } from 'lucide-react';
+import { LogOut, Menu, Bell, User as UserIcon, Check, Info } from 'lucide-react';
 import api from '../api/axios';
 import type { AppNotification } from '../types';
 import logo from '../assets/em.png';
@@ -160,9 +160,9 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/50 font-sans text-gray-900 flex flex-col">
+    <div className="min-h-screen text-slate-900 flex flex-col">
       {/* Top Navbar */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+      <header className="sticky top-0 z-50 border-b border-white/60 bg-white/80 shadow-sm backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             
@@ -174,17 +174,12 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                   alt="Expense Management" 
                   className="h-10 w-auto cursor-pointer"
                 />
-                <span className="text-xl font-bold text-gray-900 tracking-tight text-nowrap">Expense Management</span>
+                <span className="text-xl font-extrabold text-slate-900 tracking-tight text-nowrap">Expense Management</span>
               </div>
             </div>
 
-            {/* Right side: Search, Notifications, Profile */}
+            {/* Right side: Notifications, Profile */}
             <div className="flex items-center">
-              <div className="hidden lg:flex items-center mx-4 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-shadow">
-                <Search className="h-4 w-4 text-gray-400 mr-2" />
-                <input type="text" placeholder="Search..." className="bg-transparent border-none outline-none text-sm w-48 lg:w-64 placeholder-gray-400 text-gray-900" />
-              </div>
-              
               {/* Notification Dropdown Container */}
               <div className="relative" ref={dropdownRef}>
                 <button 
@@ -192,11 +187,13 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                     setNotificationsOpen(!notificationsOpen);
                     setProfileOpen(false);
                   }}
-                  className={`relative p-1.5 rounded-full transition-colors hidden sm:block ${notificationsOpen ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'}`}
+                  className={`relative hidden rounded-full p-2 transition-colors sm:block ${
+                    notificationsOpen ? 'bg-teal-100 text-teal-700' : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600'
+                  }`}
                 >
                   <Bell className="h-5 w-5" />
                   {unreadCount > 0 && (
-                    <span className="absolute top-0 right-0 block h-4 w-4 rounded-full bg-red-500 border-2 border-white text-[8px] font-bold text-white flex items-center justify-center translate-x-1 -translate-y-1">
+                    <span className="absolute top-0 right-0 block h-4 w-4 rounded-full border-2 border-white bg-rose-500 text-[8px] font-bold text-white flex items-center justify-center translate-x-1 -translate-y-1">
                       {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                   )}
@@ -204,13 +201,13 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 
                 {/* Notifications Panel */}
                 {notificationsOpen && (
-                  <div className="origin-top-right absolute right-0 mt-3 w-80 sm:w-96 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20 border border-gray-100 flex flex-col overflow-hidden transition-all transform opacity-100 scale-100">
-                    <div className="px-4 py-3 border-b border-gray-50 flex items-center justify-between bg-white">
-                      <h3 className="text-sm font-bold text-gray-900 tracking-tight">Notifications</h3>
+                  <div className="origin-top-right absolute right-0 mt-3 w-80 sm:w-96 rounded-2xl border border-slate-200 bg-white shadow-xl z-20 flex flex-col overflow-hidden">
+                    <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between bg-white">
+                      <h3 className="text-sm font-bold text-slate-900 tracking-tight">Notifications</h3>
                       {unreadCount > 0 && (
                         <button 
                           onClick={handleMarkAllAsRead}
-                          className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+                          className="text-xs font-semibold text-teal-700 hover:text-teal-900 transition-colors"
                         >
                           Mark all as read
                         </button>
@@ -220,14 +217,14 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                     <div className="max-h-80 overflow-y-auto w-full">
                       {(!Array.isArray(notifications) || notifications.length === 0) ? (
                         <div className="px-4 py-8 text-center flex flex-col items-center">
-                          <div className="h-10 w-10 bg-gray-50 rounded-full flex items-center justify-center mb-3">
-                            <Bell className="h-5 w-5 text-gray-300" />
+                          <div className="h-10 w-10 bg-slate-100 rounded-full flex items-center justify-center mb-3">
+                            <Bell className="h-5 w-5 text-slate-400" />
                           </div>
-                          <p className="text-sm font-medium text-gray-500">No notifications</p>
-                          <p className="text-xs text-gray-400 mt-1">You're all caught up!</p>
+                          <p className="text-sm font-medium text-slate-600">No notifications</p>
+                          <p className="text-xs text-slate-400 mt-1">You're all caught up!</p>
                         </div>
                       ) : (
-                        <ul className="divide-y divide-gray-50">
+                        <ul className="divide-y divide-slate-100">
                           {Array.isArray(notifications) && notifications.map((notification) => {
                             const isUnread = !notification.is_read;
                             const isInvitation = notification.type?.toLowerCase().includes('invitation') || notification.title?.toLowerCase().includes('invite');
@@ -245,17 +242,17 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                                   }
                                   setNotificationsOpen(false);
                                 }}
-                                className={`p-4 hover:bg-gray-50 transition-colors relative cursor-pointer group flex gap-3 flex-col sm:flex-row ${isUnread ? 'bg-blue-50/40' : 'bg-white'}`}
+                                className={`p-4 hover:bg-slate-50 transition-colors relative cursor-pointer group flex gap-3 flex-col sm:flex-row ${isUnread ? 'bg-teal-50/60' : 'bg-white'}`}
                               >
                                 <div className="flex gap-3 w-full">
-                                  <div className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center mt-0.5 ${isUnread ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-400'}`}>
+                                  <div className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center mt-0.5 ${isUnread ? 'bg-teal-100 text-teal-700' : 'bg-slate-100 text-slate-400'}`}>
                                     <Info className="h-4 w-4" />
                                   </div>
                                   <div className="flex-1 min-w-0">
-                                    <p className={`text-sm tracking-tight ${isUnread ? 'font-semibold text-gray-900' : 'font-medium text-gray-700'}`}>
+                                    <p className={`text-sm tracking-tight ${isUnread ? 'font-semibold text-slate-900' : 'font-medium text-slate-700'}`}>
                                       {notification.title || 'Notification'}
                                     </p>
-                                    <p className={`text-xs mt-0.5 ${isUnread ? 'text-gray-600 font-medium' : 'text-gray-500'}`} style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                                    <p className={`text-xs mt-0.5 ${isUnread ? 'text-slate-600 font-medium' : 'text-slate-500'}`} style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
                                       {notification.message || ''}
                                     </p>
                                     
@@ -264,21 +261,21 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                                         <button 
                                           onClick={(e) => handleInvitationAction(notification.id, invitationId, 'accept', e)}
                                           disabled={processingNotifications.has(notification.id)}
-                                          className="flex-1 text-xs flex items-center justify-center font-bold text-white bg-green-600 hover:bg-green-700 disabled:bg-green-300 disabled:cursor-not-allowed py-1.5 px-2 rounded-md shadow-sm transition-colors"
+                                          className="flex-1 text-xs flex items-center justify-center font-bold text-white bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 disabled:cursor-not-allowed py-1.5 px-2 rounded-md shadow-sm transition-colors"
                                         >
                                           {processingNotifications.has(notification.id) ? '...' : 'Accept ✅'}
                                         </button>
                                         <button 
                                           onClick={(e) => handleInvitationAction(notification.id, invitationId, 'reject', e)}
                                           disabled={processingNotifications.has(notification.id)}
-                                          className="flex-1 text-xs flex items-center justify-center font-bold text-gray-700 bg-white hover:bg-red-50 hover:text-red-700 border border-gray-200 hover:border-red-200 disabled:opacity-50 disabled:cursor-not-allowed py-1.5 px-2 rounded-md shadow-sm transition-colors"
+                                          className="flex-1 text-xs flex items-center justify-center font-bold text-slate-700 bg-white hover:bg-rose-50 hover:text-rose-700 border border-slate-200 hover:border-rose-200 disabled:opacity-50 disabled:cursor-not-allowed py-1.5 px-2 rounded-md shadow-sm transition-colors"
                                         >
                                           {processingNotifications.has(notification.id) ? '...' : 'Reject ❌'}
                                         </button>
                                       </div>
                                     )}
 
-                                    <p className="text-[10px] text-gray-400 mt-1.5 uppercase tracking-wider font-semibold">
+                                    <p className="text-[10px] text-slate-400 mt-1.5 uppercase tracking-wider font-semibold">
                                       {new Date(notification.created_at).toLocaleString()}
                                     </p>
                                   </div>
@@ -286,7 +283,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                                     <div className="flex-shrink-0 self-center opacity-0 group-hover:opacity-100 transition-opacity ml-2">
                                       <button 
                                         onClick={(e) => handleMarkAsRead(notification.id, e)}
-                                        className="p-1 rounded-full text-blue-500 hover:bg-blue-100 transition-colors"
+                                        className="p-1 rounded-full text-teal-600 hover:bg-teal-100 transition-colors"
                                         title="Mark as read"
                                       >
                                         <Check className="h-4 w-4" />
@@ -304,7 +301,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                 )}
               </div>
               
-              <div className="h-6 w-px bg-gray-200 mx-3 hidden sm:block"></div>
+              <div className="h-6 w-px bg-slate-200 mx-3 hidden sm:block"></div>
               
               {/* Profile dropdown */}
               <div className="relative ml-2 sm:ml-0">
@@ -315,7 +312,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                   }}
                   className="flex items-center focus:outline-none"
                 >
-                  <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 hover:bg-blue-200 transition-colors border border-blue-200">
+                  <div className="h-8 w-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-800 hover:bg-teal-200 transition-colors border border-teal-200">
                     <span className="font-semibold text-sm">
                       {user?.name?.charAt(0).toUpperCase() || <UserIcon className="h-4 w-4" />}
                     </span>
@@ -325,24 +322,24 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                 {profileOpen && (
                   <>
                     <div className="fixed inset-0 z-10" onClick={() => setProfileOpen(false)}></div>
-                    <div className="origin-top-right absolute right-0 mt-3 w-56 rounded-xl shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-20 border border-gray-100">
-                      <div className="px-4 py-3 border-b border-gray-50">
-                        <p className="text-sm font-semibold text-gray-900 truncate">{user?.name || 'User'}</p>
-                        <p className="text-xs font-medium text-gray-500 truncate">{user?.email || ''}</p>
+                    <div className="origin-top-right absolute right-0 mt-3 w-56 rounded-xl shadow-lg py-1 bg-white z-20 border border-slate-200">
+                      <div className="px-4 py-3 border-b border-slate-100">
+                        <p className="text-sm font-semibold text-slate-900 truncate">{user?.name || 'User'}</p>
+                        <p className="text-xs font-medium text-slate-500 truncate">{user?.email || ''}</p>
                       </div>
                       <Link 
                         to="/profile" 
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 font-medium transition-colors"
+                        className="flex items-center px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 font-medium transition-colors"
                       >
-                        <UserIcon className="mr-3 h-4 w-4 text-gray-400" />
+                        <UserIcon className="mr-3 h-4 w-4 text-slate-400" />
                         View Profile
                       </Link>
                       <button 
                         onClick={handleLogout}
-                        className="flex items-center w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 font-semibold transition-colors border-t border-gray-50"
+                        className="flex items-center w-full text-left px-4 py-2.5 text-sm text-rose-600 hover:bg-rose-50 font-semibold transition-colors border-t border-slate-100"
                       >
-                        <LogOut className="mr-3 h-4 w-4 text-red-500" />
+                        <LogOut className="mr-3 h-4 w-4 text-rose-500" />
                         Sign Out
                       </button>
                     </div>
@@ -354,7 +351,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
               <div className="flex items-center sm:hidden ml-4">
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none"
+                  className="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-slate-500 hover:bg-slate-100 focus:outline-none"
                 >
                   <Menu className="h-6 w-6" />
                 </button>
@@ -365,21 +362,21 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 
         {/* Mobile menu */}
         {mobileMenuOpen && (
-          <div className="sm:hidden border-t border-gray-200 bg-white shadow-lg absolute w-full z-40">
+          <div className="sm:hidden border-t border-slate-200 bg-white shadow-lg absolute w-full z-40">
             <div className="pt-2 pb-3 space-y-1">
               {/* Logo handles dashboard navigation */}
             </div>
-            <div className="pt-4 pb-4 border-t border-gray-100 bg-gray-50">
+            <div className="pt-4 pb-4 border-t border-slate-100 bg-slate-50">
               <div className="flex items-center px-4 mb-3">
                 <div className="flex-shrink-0 flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 border border-blue-200">
+                  <div className="h-10 w-10 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 border border-teal-200">
                     <span className="font-semibold text-lg">
                       {user?.name?.charAt(0).toUpperCase() || <UserIcon className="h-5 w-5" />}
                     </span>
                   </div>
                   <div>
-                    <div className="text-base font-semibold text-gray-900">{user?.name}</div>
-                    <div className="text-sm font-medium text-gray-500">{user?.email}</div>
+                    <div className="text-base font-semibold text-slate-900">{user?.name}</div>
+                    <div className="text-sm font-medium text-slate-500">{user?.email}</div>
                   </div>
                 </div>
               </div>
@@ -389,12 +386,12 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                     setNotificationsOpen(true);
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full flex items-center px-4 py-3 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  className="w-full flex items-center px-4 py-3 text-base font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                 >
-                  <Bell className="h-5 w-5 mr-3 text-gray-400" />
+                  <Bell className="h-5 w-5 mr-3 text-slate-400" />
                   Notifications
                   {unreadCount > 0 && (
-                    <span className="ml-auto inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                    <span className="ml-auto inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-800">
                       {unreadCount}
                     </span>
                   )}
@@ -402,9 +399,9 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                 <Link 
                   to="/profile" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center px-4 py-3 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  className="flex items-center px-4 py-3 text-base font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                 >
-                  <UserIcon className="h-5 w-5 mr-3 text-gray-400" />
+                  <UserIcon className="h-5 w-5 mr-3 text-slate-400" />
                   View Profile
                 </Link>
                 <button 
@@ -412,9 +409,9 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                     handleLogout();
                     setMobileMenuOpen(false);
                   }}
-                  className="flex items-center w-full text-left px-4 py-3 text-base font-semibold text-red-600 hover:bg-red-50 hover:text-red-700"
+                  className="flex items-center w-full text-left px-4 py-3 text-base font-semibold text-rose-600 hover:bg-rose-50 hover:text-rose-700"
                 >
-                  <LogOut className="h-5 w-5 mr-3 text-red-500" />
+                  <LogOut className="h-5 w-5 mr-3 text-rose-500" />
                   Sign Out
                 </button>
               </div>
@@ -431,10 +428,10 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-4 right-4 z-50 animate-fade-in-up">
-          <div className={`rounded-lg px-4 py-3 shadow-lg border text-sm font-bold flex items-center ${
+          <div className={`rounded-xl px-4 py-3 shadow-lg border text-sm font-bold flex items-center ${
             toastMessage.type === 'success' 
-            ? 'bg-green-50 border-green-200 text-green-800' 
-            : 'bg-red-50 border-red-200 text-red-800'
+            ? 'bg-emerald-50 border-emerald-200 text-emerald-800' 
+            : 'bg-rose-50 border-rose-200 text-rose-800'
           }`}>
             {toastMessage.type === 'success' ? <Check className="h-4 w-4 mr-2" /> : <Info className="h-4 w-4 mr-2" />}
             {toastMessage.title}

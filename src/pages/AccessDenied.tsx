@@ -6,33 +6,31 @@ const AccessDenied = () => {
 
   return (
     <div className="min-h-[70vh] flex items-center justify-center p-6">
-      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 sm:p-12 max-w-lg w-full text-center flex flex-col items-center animate-in fade-in zoom-in duration-300">
-        <div className="h-20 w-20 bg-red-50 rounded-full flex items-center justify-center mb-6 shadow-inner">
-          <ShieldAlert className="h-10 w-10 text-red-600" />
+      <div className="w-full max-w-lg rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-[0_30px_70px_-45px_rgba(15,23,42,0.85)] sm:p-12">
+        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-rose-50 shadow-inner">
+          <ShieldAlert className="h-10 w-10 text-rose-600" />
         </div>
-        
-        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight mb-3">
-          Access Denied
-        </h1>
-        
-        <p className="text-gray-500 text-lg mb-8 max-w-sm">
-          You don't have permission to view this book or its transactions. Please contact the owner for access.
+
+        <h1 className="mb-3 text-3xl font-extrabold tracking-tight text-slate-900">Access Denied</h1>
+
+        <p className="mb-8 text-base text-slate-500">
+          You do not have permission to view this book or its transactions. Contact the owner for access.
         </p>
-        
-        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-          <button 
+
+        <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:justify-center">
+          <button
             onClick={() => navigate(-1)}
-            className="inline-flex items-center justify-center px-6 py-3 border border-gray-200 rounded-xl text-base font-semibold text-gray-700 bg-white hover:bg-gray-50 transition-all shadow-sm"
+            className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 text-base font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeft className="mr-2 h-4 w-4" />
             Go Back
           </button>
-          
-          <button 
+
+          <button
             onClick={() => navigate('/dashboard')}
-            className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 rounded-xl text-base font-semibold text-white hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
+            className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-6 py-3 text-base font-semibold text-white shadow-lg shadow-slate-900/20 transition-colors hover:bg-slate-800"
           >
-            <LayoutDashboard className="h-4 w-4 mr-2" />
+            <LayoutDashboard className="mr-2 h-4 w-4" />
             Go Dashboard
           </button>
         </div>

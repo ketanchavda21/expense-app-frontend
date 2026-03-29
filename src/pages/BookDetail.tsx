@@ -170,7 +170,7 @@ const BookDetail = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64 p-20">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
       </div>
     );
   }
@@ -181,18 +181,15 @@ const BookDetail = () => {
   if (genericError || !book) {
     return (
       <div className="py-8 max-w-2xl mx-auto">
-        <button onClick={() => navigate('/dashboard')} className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 mb-6 group">
+        <button onClick={() => navigate('/dashboard')} className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-700 mb-6 group">
           <ArrowLeft className="h-4 w-4 mr-1 group-hover:-translate-x-1 transition-transform" /> Back to Dashboard
         </button>
-        <div className="bg-red-50 border border-red-100 p-6 rounded-2xl text-red-700 font-medium shadow-sm">
+        <div className="rounded-2xl border border-rose-100 bg-rose-50 p-6 text-rose-700 font-medium shadow-sm">
           {genericError || 'Unable to load book details. Please try again later.'}
         </div>
       </div>
     );
   }
-  
-  console.log("Book Data:", book);
-  console.log("Book Role:", book.role);
   
   let effectiveRole = book.role;
   if (!effectiveRole) {
@@ -207,15 +204,15 @@ const BookDetail = () => {
   // Safety: If role is totally undefined, do NOT block owner blindly, show retry/fallback spinner
   if (effectiveRole === undefined) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 mt-8 bg-white rounded-xl border border-gray-200 max-w-xl mx-auto text-center shadow-sm">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mb-4"></div>
-        <h2 className="text-xl font-bold text-gray-900 mb-2">Verifying Role...</h2>
-        <p className="text-gray-500 text-sm mb-4">
+      <div className="mx-auto mt-8 flex max-w-xl flex-col items-center justify-center rounded-xl border border-slate-200 bg-white p-12 text-center shadow-sm">
+        <div className="mb-4 h-10 w-10 animate-spin rounded-full border-b-2 border-teal-600"></div>
+        <h2 className="mb-2 text-xl font-bold text-slate-900">Verifying Role...</h2>
+        <p className="mb-4 text-sm text-slate-500">
           Attempting to load your access permissions safely.
         </p>
         <button 
           onClick={() => fetchBookData()} 
-          className="inline-flex items-center px-4 py-2 border border-gray-200 shadow-sm text-sm font-bold rounded-lg text-gray-600 bg-gray-50 hover:bg-white transition-colors"
+          className="inline-flex items-center rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-600 shadow-sm transition-colors hover:bg-white"
         >
           Force Retry
         </button>
@@ -226,29 +223,25 @@ const BookDetail = () => {
   const isOwner = effectiveRole === 'owner';
   const isEditor = effectiveRole !== 'viewer';
 
-  console.log("Role:", effectiveRole);
-  console.log("User:", user?.id);
-  console.log("Members:", book.members);
-
   return (
     <div className="py-2">
-      <button onClick={() => navigate('/dashboard')} className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 mb-6 transition-colors group">
+      <button onClick={() => navigate('/dashboard')} className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 mb-6 transition-colors group">
         <ArrowLeft className="h-4 w-4 mr-1.5 group-hover:-translate-x-1 transition-transform" /> Back to Dashboard
       </button>
 
       {/* Header section */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-8">
+      <div className="mb-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-6 gap-4">
           <div className="mb-2 sm:mb-0">
-            <h1 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">{book.name}</h1>
-            {book.description && <p className="text-gray-500 text-sm max-w-2xl">{book.description}</p>}
+            <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-slate-900">{book.name}</h1>
+            {book.description && <p className="max-w-2xl text-sm text-slate-500">{book.description}</p>}
           </div>
           
           <div>
             {isOwner ? (
               <button 
                 onClick={() => setShowDeleteModal(true)}
-                className="inline-flex items-center px-4 py-2 border border-red-200 text-sm font-bold rounded-lg text-red-600 bg-red-50 hover:bg-red-100 transition-all shadow-sm focus:ring-2 focus:ring-red-500"
+                className="inline-flex items-center rounded-lg border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-bold text-rose-600 shadow-sm transition-all hover:bg-rose-100 focus:ring-2 focus:ring-rose-500"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete Book
@@ -257,7 +250,7 @@ const BookDetail = () => {
               <button 
                 disabled
                 title="Only owners can delete this book"
-                className="inline-flex items-center px-4 py-2 border border-gray-100 text-sm font-bold rounded-lg text-gray-400 bg-gray-50 cursor-not-allowed transition-all opacity-60"
+                className="inline-flex items-center rounded-lg border border-slate-100 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-400 cursor-not-allowed transition-all opacity-60"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete Book
@@ -267,37 +260,37 @@ const BookDetail = () => {
         </div>
         
         {/* Stats row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-gray-100">
-          <div className="rounded-xl p-5 border border-gray-100 shadow-sm bg-gray-50 flex flex-col">
+        <div className="grid grid-cols-1 gap-6 border-t border-slate-100 pt-6 md:grid-cols-3">
+          <div className="flex flex-col rounded-xl border border-slate-100 bg-slate-50 p-5 shadow-sm">
             <div className="flex items-center mb-3">
-              <div className="p-2 bg-white shadow-sm border border-gray-100 rounded-md mr-3">
-                <Activity className="h-5 w-5 text-gray-700" />
+              <div className="mr-3 rounded-md border border-slate-100 bg-white p-2 shadow-sm">
+                <Activity className="h-5 w-5 text-slate-700" />
               </div>
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Balance</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Balance</h3>
             </div>
-            <p className={`text-3xl font-bold mt-auto ${stats.balance >= 0 ? 'text-gray-900' : 'text-red-600'}`}>
+            <p className={`mt-auto text-3xl font-bold ${stats.balance >= 0 ? 'text-slate-900' : 'text-rose-600'}`}>
               ₹{Number(Math.abs(stats.balance)).toFixed(2)}
             </p>
           </div>
 
-          <div className="rounded-xl p-5 border border-gray-100 shadow-sm bg-white flex flex-col transition-colors">
+          <div className="flex flex-col rounded-xl border border-slate-100 bg-white p-5 shadow-sm transition-colors">
             <div className="flex items-center mb-3">
-              <div className="p-2 bg-green-50 rounded-md mr-3">
-                <TrendingUp className="h-5 w-5 text-green-600" />
+              <div className="mr-3 rounded-md bg-emerald-50 p-2">
+                <TrendingUp className="h-5 w-5 text-emerald-600" />
               </div>
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Income</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Income</h3>
             </div>
-            <p className="text-2xl font-semibold text-gray-900 mt-auto">₹{Number(stats.total_income).toFixed(2)}</p>
+            <p className="mt-auto text-2xl font-semibold text-slate-900">₹{Number(stats.total_income).toFixed(2)}</p>
           </div>
 
-          <div className="rounded-xl p-5 border border-gray-100 shadow-sm bg-white flex flex-col transition-colors">
+          <div className="flex flex-col rounded-xl border border-slate-100 bg-white p-5 shadow-sm transition-colors">
             <div className="flex items-center mb-3">
-              <div className="p-2 bg-red-50 rounded-md mr-3">
-                <TrendingDown className="h-5 w-5 text-red-600" />
+              <div className="mr-3 rounded-md bg-rose-50 p-2">
+                <TrendingDown className="h-5 w-5 text-rose-600" />
               </div>
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Expense</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Expense</h3>
             </div>
-            <p className="text-2xl font-semibold text-gray-900 mt-auto">₹{Number(stats.total_expense).toFixed(2)}</p>
+            <p className="mt-auto text-2xl font-semibold text-slate-900">₹{Number(stats.total_expense).toFixed(2)}</p>
           </div>
         </div>
       </div>
@@ -306,7 +299,7 @@ const BookDetail = () => {
         {/* Left Column: Transactions */}
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between pl-1">
-            <h2 className="text-xl font-bold text-gray-900 tracking-tight">Recent Transactions</h2>
+            <h2 className="text-xl font-bold text-slate-900 tracking-tight">Recent Transactions</h2>
           </div>
           
           <TransactionList 
@@ -321,18 +314,18 @@ const BookDetail = () => {
           {isEditor ? (
              <TransactionForm bookSlug={book.slug} onSuccess={fetchBookData} />
           ) : (
-            <div className="w-full flex items-center justify-center py-3 px-4 rounded-xl border border-gray-100 bg-gray-50 text-gray-400 text-sm font-semibold cursor-not-allowed opacity-60" title="You only have read-only access to this book">
+            <div className="w-full flex items-center justify-center py-3 px-4 rounded-xl border border-slate-100 bg-slate-50 text-slate-400 text-sm font-semibold cursor-not-allowed opacity-60" title="You only have read-only access to this book">
                <PlusCircle className="h-5 w-5 mr-2" />
                Add Transaction
             </div>
           )}
           
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-            <div className="flex items-center mb-6 border-b border-gray-100 pb-4">
-              <div className="p-2 bg-gray-50 rounded-md mr-3 text-gray-600 border border-gray-200">
+          <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-6 flex items-center border-b border-slate-100 pb-4">
+              <div className="mr-3 rounded-md border border-slate-200 bg-slate-50 p-2 text-slate-600">
                 <Users className="h-4 w-4" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 tracking-tight">Members</h3>
+              <h3 className="text-lg font-bold text-slate-900 tracking-tight">Members</h3>
             </div>
             
             <ul className="mb-6 space-y-3">
@@ -343,41 +336,41 @@ const BookDetail = () => {
                 const isCurrentUser = user?.id === (member.user?.id || member.id);
                 
                 return (
-                <li key={member.id} className="flex justify-between items-center text-sm p-3 rounded-lg bg-gray-50 border border-gray-100 transition-colors hover:bg-white hover:shadow-sm">
+                <li key={member.id} className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 p-3 text-sm transition-colors hover:bg-white hover:shadow-sm">
                   <div className="flex items-center overflow-hidden">
-                    <div className="h-9 w-9 flex-shrink-0 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold mr-3 shadow-sm border border-blue-200">
+                    <div className="mr-3 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-teal-200 bg-teal-100 font-bold text-teal-700 shadow-sm">
                       {memberInitials}
                     </div>
                     <div className="min-w-0">
-                      <p className="font-semibold text-gray-900 truncate">
+                      <p className="truncate font-semibold text-slate-900">
                         {memberName}
-                        <span className={`font-normal ml-1.5 capitalize text-xs px-1.5 py-0.5 rounded-md ${
-                          member.role === 'owner' ? 'bg-purple-100 text-purple-700' : 
-                          member.role === 'editor' ? 'bg-blue-100 text-blue-700' : 
-                          'bg-gray-100 text-gray-700'
+                        <span className={`ml-1.5 rounded-md px-1.5 py-0.5 text-xs font-normal capitalize ${
+                          member.role === 'owner' ? 'bg-amber-100 text-amber-700' : 
+                          member.role === 'editor' ? 'bg-teal-100 text-teal-700' : 
+                          'bg-slate-100 text-slate-700'
                         }`}>
                           ({member.role})
                         </span>
                       </p>
-                      <p className="text-xs text-gray-500 font-medium mt-1 truncate">{memberEmail}</p>
+                      <p className="mt-1 truncate text-xs font-medium text-slate-500">{memberEmail}</p>
                     </div>
                   </div>
                   
                   <div className="flex flex-col items-end flex-shrink-0 ml-4">
                     {isCurrentUser && (
-                      <span className="px-2 py-0.5 mb-1 rounded text-[10px] font-bold bg-white text-gray-600 border border-gray-200 shadow-sm uppercase tracking-wide">You</span>
+                      <span className="mb-1 rounded border border-slate-200 bg-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-600 shadow-sm">You</span>
                     )}
                     
                     {isOwner && !isCurrentUser && (
                       member.role === 'owner' ? (
-                        <div className="mt-1 py-1.5 px-3 border border-gray-100 bg-gray-50 rounded-lg text-xs font-bold text-gray-400 cursor-not-allowed shadow-sm opacity-70 flex items-center" title="Owner role cannot be changed">
+                        <div className="mt-1 flex items-center rounded-lg border border-slate-100 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-400 shadow-sm opacity-70 cursor-not-allowed" title="Owner role cannot be changed">
                           Owner
                         </div>
                       ) : (
                         <select
                           value={member.role}
                           onChange={(e) => handleUpdateRole(member.id, e.target.value)}
-                          className="mt-1 block py-1.5 px-3 border border-gray-200 bg-white rounded-lg text-xs font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-sm hover:border-blue-300 transition-colors"
+                          className="mt-1 block rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-sm transition-colors hover:border-teal-300 focus:outline-none focus:ring-2 focus:ring-teal-400 cursor-pointer"
                         >
                           <option value="owner">Owner</option>
                           <option value="editor">Editor</option>
@@ -389,31 +382,31 @@ const BookDetail = () => {
                 </li>
               )})}
               {(!book.members || book.members.filter(m => m.status !== 'pending' && m.status !== 'rejected').length === 0) && (
-                <li className="text-sm text-gray-500 p-2 text-center bg-gray-50 rounded-lg">No additional members</li>
+                <li className="rounded-lg bg-slate-50 p-2 text-center text-sm text-slate-500">No additional members</li>
               )}
             </ul>
 
             {isOwner && (
-              <div className="border-t border-gray-100 pt-6">
-                <h4 className="text-sm font-bold text-gray-800 mb-3">Invite User</h4>
+              <div className="border-t border-slate-100 pt-6">
+                <h4 className="mb-3 text-sm font-bold text-slate-800">Invite User</h4>
                 <form onSubmit={handleInvite} className="flex flex-col space-y-3">
                   <input
                     type="email"
                     required
                     placeholder="name@company.com"
-                    className="block w-full border border-gray-200 rounded-lg shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm text-gray-900 bg-gray-50 hover:bg-white transition-colors"
+                    className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 shadow-sm transition-colors hover:bg-white focus:outline-none focus:ring-2 focus:ring-teal-400"
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                   />
                   <button
                     type="submit"
                     disabled={inviteLoading}
-                    className="w-full flex justify-center items-center py-2.5 bg-blue-600 rounded-lg shadow-sm text-sm font-bold text-white hover:bg-blue-700 disabled:bg-blue-300 transition-all focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                    className="w-full flex items-center justify-center rounded-lg bg-slate-900 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-slate-800 disabled:bg-slate-400 focus:ring-2 focus:ring-teal-400 focus:ring-offset-1"
                   >
                     <Send className="h-4 w-4 mr-2" />
                     {inviteLoading ? 'Sending...' : 'Send Invite'}
                   </button>
-                  {inviteMsg && <p className="text-xs font-bold text-green-600 text-center mt-2 animate-pulse">{inviteMsg}</p>}
+                  {inviteMsg && <p className="mt-2 text-center text-xs font-bold text-emerald-600 animate-pulse">{inviteMsg}</p>}
                 </form>
               </div>
             )}
@@ -423,41 +416,41 @@ const BookDetail = () => {
 
       {/* Delete Book Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-md transition-opacity">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col transform transition-all scale-100 border border-gray-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md transition-opacity">
+          <div className="w-full max-w-md scale-100 transform overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-2xl transition-all">
             <form onSubmit={handleDeleteBook}>
               <div className="px-6 py-8 sm:px-10">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full bg-red-50 border border-red-100 mb-6 mx-auto shadow-inner">
-                  <AlertTriangle className="h-8 w-8 text-red-600" />
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-rose-100 bg-rose-50 shadow-inner">
+                  <AlertTriangle className="h-8 w-8 text-rose-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 text-center mb-2">
+                <h3 className="mb-2 text-center text-2xl font-bold text-slate-900">
                   Delete Book?
                 </h3>
-                <p className="text-sm text-gray-500 text-center mb-8 max-w-sm mx-auto leading-relaxed">
+                <p className="mx-auto mb-8 max-w-sm text-center text-sm leading-relaxed text-slate-500">
                   This action is permanent and cannot be undone. You are about to delete <strong>{book?.name}</strong> and all its history.
                 </p>
                 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">
+                    <label className="mb-2 ml-1 block text-xs font-bold uppercase tracking-widest text-slate-500">
                       Type name to confirm
                     </label>
                     <input
                       type="text"
                       required
                       placeholder={book?.name || ''}
-                      className="block w-full border border-gray-200 rounded-xl shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-red-500 text-base text-gray-900 bg-gray-50 hover:bg-white transition-all font-medium"
+                      className="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base font-medium text-slate-900 shadow-sm transition-all hover:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500"
                       value={deleteConfirmName}
                       onChange={(e) => setDeleteConfirmName(e.target.value)}
                     />
                   </div>
                 </div>
               </div>
-              <div className="bg-gray-50/80 px-8 py-5 flex flex-col sm:flex-row-reverse gap-3 border-t border-gray-100">
+              <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/80 px-8 py-5 sm:flex-row-reverse">
                 <button
                   type="submit"
                   disabled={deleteLoading || deleteConfirmName !== book?.name}
-                  className="inline-flex justify-center flex-1 rounded-xl shadow-lg shadow-red-100 px-6 py-3 bg-red-600 text-base font-bold text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:bg-red-300 disabled:cursor-not-allowed transition-all"
+                  className="inline-flex flex-1 justify-center rounded-xl bg-rose-600 px-6 py-3 text-base font-bold text-white shadow-lg shadow-rose-100 transition-all hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-rose-300"
                 >
                   {deleteLoading ? 'Deleting...' : 'Delete Forever'}
                 </button>
@@ -467,7 +460,7 @@ const BookDetail = () => {
                     setShowDeleteModal(false);
                     setDeleteConfirmName('');
                   }}
-                  className="inline-flex justify-center flex-1 rounded-xl border border-gray-200 shadow-sm px-6 py-3 bg-white text-base font-bold text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                  className="inline-flex flex-1 justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 text-base font-bold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
                 >
                   Keep Book
                 </button>
