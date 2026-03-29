@@ -50,7 +50,7 @@ const Register = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://127.0.0.1:8000/api/auth/google';
+    window.location.href = 'https://greenyellow-cat-795024.hostingersite.com/api/auth/google';
   };
 
   return (
